@@ -21,13 +21,22 @@ module.exports = function(libraryPath, serverConfig, callback) {
     library.ImageProxyState.findOne({
       where: { modelId: req.params.id }
     }).then(function(row) {
-      res.sendFile(path.resolve(path.join(libraryPath, 'Thumbnails', row.miniThumbnailPath)));
+      if (row) {
+        res.sendFile(path.resolve(path.join(libraryPath, 'Thumbnails', row.miniThumbnailPath)));
+      } else {
+        // no thumbnail available, send the master
+        return library.Master.findOne({
+          where: { modelId: req.params.id }
+        }).then(function(row) {
+          res.sendFile(path.resolve(path.join(libraryPath, 'Masters', row.imagePath)));
+        })
+      }
     }).catch(next);
   });
 
   io.on('connection', function(socket) {
     library.Master.findAll({
-      limit: 10
+      order: [['imageDate', 'DESC']]
     }).then(function(rows) {
       socket.emit('action', {
         type: 'SET_PHOTOS',
