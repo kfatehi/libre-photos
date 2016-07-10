@@ -5,7 +5,7 @@ var args = require('minimist')(process.argv);
 if (args.library) {
   LP.serveLibrary(args.library, {
     copy: args.copy,
-    port: args.port || 3000
+    port: args.port || process.env.PORT || 3000
   }, function(err, config) {
     if (err) throw err;
     console.log('Serving library on '+config.port);
