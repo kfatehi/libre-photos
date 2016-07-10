@@ -5,13 +5,9 @@ import * as actionCreators from '../action-creators';
 
 export const Viewer = React.createClass({
   render: function() {
-    const {
-      page, photos
-    } = this.props;
-    console.log(page, photos);
+    const { photos } = this.props;
 
-    var elemHeight = 235;
-
+    const elemHeight = 235;
 
     const elemStyle = {
       height: `${elemHeight}px`,
@@ -29,9 +25,7 @@ export const Viewer = React.createClass({
     }
 
     return (
-      <Infinite containerHeight={window.innerHeight} elementHeight={elemHeight}
-        useWindowAsScrollContainer>
-      
+      <Infinite containerHeight={window.innerHeight} elementHeight={elemHeight} useWindowAsScrollContainer>
         {photos.map(photo => <div style={elemStyle} key={photo.modelId}>
           <a href={`/masters/${photo.modelId}`}><img style={imgStyle} src={`/thumbnails/${photo.modelId}`}/></a>
           <div style={captionStyle}></div>
@@ -43,8 +37,7 @@ export const Viewer = React.createClass({
 
 function mapStateToProps(state, props) {
   return {
-    photos: state.viewer.photos || [],
-    page: state.viewer.page
+    photos: state.viewer.photos || []
   };
 }
 

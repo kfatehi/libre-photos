@@ -7890,11 +7890,8 @@ webpackJsonpbundle([0],[
 	  displayName: 'Viewer',
 	
 	  render: function render() {
-	    var _props = this.props;
-	    var page = _props.page;
-	    var photos = _props.photos;
+	    var photos = this.props.photos;
 	
-	    console.log(page, photos);
 	
 	    var elemHeight = 235;
 	
@@ -7915,8 +7912,7 @@ webpackJsonpbundle([0],[
 	
 	    return _react2.default.createElement(
 	      _reactInfinite2.default,
-	      { containerHeight: window.innerHeight, elementHeight: elemHeight,
-	        useWindowAsScrollContainer: true },
+	      { containerHeight: window.innerHeight, elementHeight: elemHeight, useWindowAsScrollContainer: true },
 	      photos.map(function (photo) {
 	        return _react2.default.createElement(
 	          'div',
@@ -7935,8 +7931,7 @@ webpackJsonpbundle([0],[
 	
 	function mapStateToProps(state, props) {
 	  return {
-	    photos: state.viewer.photos || [],
-	    page: state.viewer.page
+	    photos: state.viewer.photos || []
 	  };
 	}
 	
@@ -8001,8 +7996,7 @@ webpackJsonpbundle([0],[
 	    case 'SET_PHOTOS':
 	      {
 	        return {
-	          photos: action.photos,
-	          page: 0
+	          photos: action.photos
 	        };
 	      }
 	  }
