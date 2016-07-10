@@ -17,6 +17,15 @@ module.exports = function(libraryPath, serverConfig, callback) {
     res.send(pkg.version+'\n');
   });
 
+  app.get('/masters/:id', function(req, res, next) {
+    console.log(req.params);
+    library.Master.findOne({
+      where: { modelId: req.params.id }
+    }).then(function(row) {
+      res.sendFile(path.resolve(path.join(libraryPath, 'Masters', row.imagePath)));
+    }).catch(next);
+  });
+
   app.get('/thumbnails/:id', function(req, res, next) {
     library.ImageProxyState.findOne({
       where: { modelId: req.params.id }
@@ -24,12 +33,7 @@ module.exports = function(libraryPath, serverConfig, callback) {
       if (row) {
         res.sendFile(path.resolve(path.join(libraryPath, 'Thumbnails', row.miniThumbnailPath)));
       } else {
-        // no thumbnail available, send the master
-        return library.Master.findOne({
-          where: { modelId: req.params.id }
-        }).then(function(row) {
-          res.sendFile(path.resolve(path.join(libraryPath, 'Masters', row.imagePath)));
-        })
+        res.sendFile(path.join(__dirname, '..', 'client', 'dist', 'img', 'nothumb.png'));
       }
     }).catch(next);
   });

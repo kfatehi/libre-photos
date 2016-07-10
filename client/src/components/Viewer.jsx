@@ -19,7 +19,7 @@ export const Viewer = React.createClass({
     }
 
     const imgStyle = {
-      maxHeight: '200px'
+      height: '200px'
     }
 
     const captionStyle = {
@@ -33,8 +33,8 @@ export const Viewer = React.createClass({
         useWindowAsScrollContainer>
       
         {photos.map(photo => <div style={elemStyle} key={photo.modelId}>
-          <img style={imgStyle} src={'/thumbnails/'+photo.modelId}/>
-          <div style={captionStyle}>Hello</div>
+          <a href={`/masters/${photo.modelId}`}><img style={imgStyle} src={`/thumbnails/${photo.modelId}`}/></a>
+          <div style={captionStyle}></div>
         </div>)}
       </Infinite>
     );

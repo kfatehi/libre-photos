@@ -7904,7 +7904,7 @@ webpackJsonpbundle([0],[
 	    };
 	
 	    var imgStyle = {
-	      maxHeight: '200px'
+	      height: '200px'
 	    };
 	
 	    var captionStyle = {
@@ -7921,12 +7921,12 @@ webpackJsonpbundle([0],[
 	        return _react2.default.createElement(
 	          'div',
 	          { style: elemStyle, key: photo.modelId },
-	          _react2.default.createElement('img', { style: imgStyle, src: '/thumbnails/' + photo.modelId }),
 	          _react2.default.createElement(
-	            'div',
-	            { style: captionStyle },
-	            'Hello'
-	          )
+	            'a',
+	            { href: '/masters/' + photo.modelId },
+	            _react2.default.createElement('img', { style: imgStyle, src: '/thumbnails/' + photo.modelId })
+	          ),
+	          _react2.default.createElement('div', { style: captionStyle })
 	        );
 	      })
 	    );
