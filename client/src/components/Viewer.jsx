@@ -10,8 +10,9 @@ export const Viewer = React.createClass({
     console.log(page, photos);
     return (
       <div>
-        {photos.map(photo => <div key={photo.uuid}>
+        {photos.map(photo => <div key={photo.modelId}>
           <pre>{JSON.stringify(photo, null, 4)}</pre>
+          <img src={'/thumbnails/'+photo.modelId}/>
         </div>)}
       </div>
     );

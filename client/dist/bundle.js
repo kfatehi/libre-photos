@@ -7756,12 +7756,13 @@ webpackJsonpbundle([0],{
 	      photos.map(function (photo) {
 	        return _react2.default.createElement(
 	          'div',
-	          { key: photo.uuid },
+	          { key: photo.modelId },
 	          _react2.default.createElement(
 	            'pre',
 	            null,
 	            JSON.stringify(photo, null, 4)
-	          )
+	          ),
+	          _react2.default.createElement('img', { src: '/thumbnails/' + photo.modelId })
 	        );
 	      })
 	    );

@@ -7,20 +7,21 @@ module.exports = function(libraryPath, serverConfig, callback) {
   var server = require('http').Server(app);
   var io = require('socket.io').listen(server);
   var library = new PhotoLibrary(libraryPath);
+  var path = require('path');
 
   app.use(cors());
 
-  app.use(express.static(__dirname+'/../client/dist'));
+  app.use(express.static(path.join(__dirname,'..', 'client', 'dist')));
 
   app.get('/version', function(req, res, next) {
     res.send(pkg.version+'\n');
   });
 
-  app.get('/masters(.json)?', function(req, res, next) {
-    library.Master.findAll({
-      limit: 10
-    }).then(function(rows) {
-      return res.json(rows);
+  app.get('/thumbnails/:id', function(req, res, next) {
+    library.ImageProxyState.findOne({
+      where: { modelId: req.params.id }
+    }).then(function(row) {
+      res.sendFile(path.resolve(path.join(libraryPath, 'Thumbnails', row.miniThumbnailPath)));
     }).catch(next);
   });
 
