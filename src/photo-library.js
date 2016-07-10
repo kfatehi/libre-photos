@@ -1,15 +1,32 @@
 var Sequelize = require('sequelize');
 var resolve = require('path').resolve;
+var fse = require('fs-extra');
 
-function PhotoLibrary(path) {
+function PhotoLibrary(path, opts) {
+
+  var paths = {
+    Library: resolve(path+'/database/Library.apdb'),
+    ImageProxies: resolve(path+'/database/ImageProxies.apdb')
+  }
+
+  if (opts.copy) {
+    console.log('making a local copy of database files...');
+    fse.copySync(paths.Library, '/tmp/library.apdb')
+    paths.Library = '/tmp/library.apdb';
+    console.log('1/2');
+    fse.copySync(paths.ImageProxies, '/tmp/imageproxies.apdb')
+    paths.ImageProxies = '/tmp/imageproxies.apdb';
+    console.log('2/2');
+  }
+
   var Library = new Sequelize({
     dialect: 'sqlite',
-    storage: resolve(path+'/database/Library.apdb')
+    storage: paths.Library
   });
 
   var ImageProxies = new Sequelize({
     dialect: 'sqlite',
-    storage: resolve(path+'/database/ImageProxies.apdb')
+    storage: paths.ImageProxies
   });
 
   this.Master = Library.define('Master', {

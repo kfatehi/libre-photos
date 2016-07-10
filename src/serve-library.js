@@ -6,7 +6,7 @@ module.exports = function(libraryPath, serverConfig, callback) {
   var cors = require('cors');
   var server = require('http').Server(app);
   var io = require('socket.io').listen(server);
-  var library = new PhotoLibrary(libraryPath);
+  var library = new PhotoLibrary(libraryPath, serverConfig);
   var path = require('path');
 
   app.use(cors());
