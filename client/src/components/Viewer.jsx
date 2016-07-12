@@ -7,10 +7,10 @@ export const Viewer = React.createClass({
   render: function() {
     const { photos } = this.props;
 
-    const elemHeight = 235;
+    const mediaHeight = 235;
 
-    const elemStyle = {
-      height: `${elemHeight}px`,
+    const mediaStyle = {
+      height: `${mediaHeight}px`,
       overflow: 'hidden'
     }
 
@@ -25,10 +25,10 @@ export const Viewer = React.createClass({
     }
 
     return (
-      <Infinite containerHeight={window.innerHeight} elementHeight={elemHeight} useWindowAsScrollContainer>
-        {photos.map(photo => <div style={elemStyle} key={photo.modelId}>
+      <Infinite containerHeight={window.innerHeight} elementHeight={mediaHeight} useWindowAsScrollContainer>
+        {photos.map(photo => <div style={mediaStyle} key={photo.modelId}>
           <a href={`/masters/${photo.modelId}`}><img style={imgStyle} src={`/thumbnails/${photo.modelId}`}/></a>
-          <div style={captionStyle}></div>
+          <div style={captionStyle}>{photo.UTI}</div>
         </div>)}
       </Infinite>
     );

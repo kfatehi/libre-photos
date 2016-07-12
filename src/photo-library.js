@@ -34,7 +34,7 @@ function PhotoLibrary(path, opts) {
       type: Sequelize.INTEGER,
       primaryKey: true
     },
-    uti: Sequelize.STRING,
+    UTI: Sequelize.STRING,
     imagePath: Sequelize.STRING,
     imageDate: Sequelize.DATE,
     imageTimeZoneOffsetSeconds: Sequelize.INTEGER

@@ -13,16 +13,18 @@ module.exports = function(libraryPath, serverConfig, callback) {
 
   app.use(express.static(path.join(__dirname,'..', 'client', 'dist')));
 
+  app.use(require('connect-stream')());
+
   app.get('/version', function(req, res, next) {
     res.send(pkg.version+'\n');
   });
 
   app.get('/masters/:id', function(req, res, next) {
-    console.log(req.params);
     library.Master.findOne({
       where: { modelId: req.params.id }
     }).then(function(row) {
-      res.sendFile(path.resolve(path.join(libraryPath, 'Masters', row.imagePath)));
+      var filePath = path.resolve(path.join(libraryPath, 'Masters', row.imagePath));
+      res.stream(filePath);
     }).catch(next);
   });
 

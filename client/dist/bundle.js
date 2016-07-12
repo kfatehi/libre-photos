@@ -23,7 +23,7 @@ webpackJsonpbundle([0],[
 	
 	var _Viewer = __webpack_require__(244);
 	
-	var _reducers = __webpack_require__(246);
+	var _reducers = __webpack_require__(259);
 	
 	var reducers = _interopRequireWildcard(_reducers);
 	
@@ -7874,11 +7874,11 @@ webpackJsonpbundle([0],[
 	
 	var _reactRedux = __webpack_require__(222);
 	
-	var _reactInfinite = __webpack_require__(247);
+	var _reactInfinite = __webpack_require__(245);
 	
 	var _reactInfinite2 = _interopRequireDefault(_reactInfinite);
 	
-	var _actionCreators = __webpack_require__(245);
+	var _actionCreators = __webpack_require__(258);
 	
 	var actionCreators = _interopRequireWildcard(_actionCreators);
 	
@@ -7893,10 +7893,10 @@ webpackJsonpbundle([0],[
 	    var photos = this.props.photos;
 	
 	
-	    var elemHeight = 235;
+	    var mediaHeight = 235;
 	
-	    var elemStyle = {
-	      height: elemHeight + 'px',
+	    var mediaStyle = {
+	      height: mediaHeight + 'px',
 	      overflow: 'hidden'
 	    };
 	
@@ -7912,17 +7912,21 @@ webpackJsonpbundle([0],[
 	
 	    return _react2.default.createElement(
 	      _reactInfinite2.default,
-	      { containerHeight: window.innerHeight, elementHeight: elemHeight, useWindowAsScrollContainer: true },
+	      { containerHeight: window.innerHeight, elementHeight: mediaHeight, useWindowAsScrollContainer: true },
 	      photos.map(function (photo) {
 	        return _react2.default.createElement(
 	          'div',
-	          { style: elemStyle, key: photo.modelId },
+	          { style: mediaStyle, key: photo.modelId },
 	          _react2.default.createElement(
 	            'a',
 	            { href: '/masters/' + photo.modelId },
 	            _react2.default.createElement('img', { style: imgStyle, src: '/thumbnails/' + photo.modelId })
 	          ),
-	          _react2.default.createElement('div', { style: captionStyle })
+	          _react2.default.createElement(
+	            'div',
+	            { style: captionStyle },
+	            photo.UTI
+	          )
 	        );
 	      })
 	    );
@@ -7939,72 +7943,6 @@ webpackJsonpbundle([0],[
 
 /***/ },
 /* 245 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.zoomIn = zoomIn;
-	exports.zoomOut = zoomOut;
-	exports.nextPage = nextPage;
-	exports.prevPage = prevPage;
-	function zoomIn() {
-	  return {
-	    meta: { remote: true },
-	    type: "ZOOM_IN"
-	  };
-	}
-	
-	function zoomOut() {
-	  return {
-	    meta: { remote: true },
-	    type: "ZOOM_OUT"
-	  };
-	}
-	
-	function nextPage() {
-	  return {
-	    meta: { remote: true },
-	    type: "NEXT_PAGE"
-	  };
-	}
-	
-	function prevPage() {
-	  return {
-	    meta: { remote: true },
-	    type: "PREV_PAGE"
-	  };
-	}
-
-/***/ },
-/* 246 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.viewer = viewer;
-	function viewer() {
-	  var state = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
-	  var action = arguments[1];
-	
-	  switch (action.type) {
-	    case 'SET_PHOTOS':
-	      {
-	        return {
-	          photos: action.photos
-	        };
-	      }
-	  }
-	  return state;
-	}
-
-/***/ },
-/* 247 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
@@ -8014,13 +7952,13 @@ webpackJsonpbundle([0],[
 	var React = global.React || __webpack_require__(51);
 	var ReactDOM = global.ReactDOM || __webpack_require__(83);
 	
-	__webpack_require__(248);
-	var scaleEnum = __webpack_require__(251);
-	var infiniteHelpers = __webpack_require__(252);
-	var _isFinite = __webpack_require__(257);
+	__webpack_require__(246);
+	var scaleEnum = __webpack_require__(249);
+	var infiniteHelpers = __webpack_require__(250);
+	var _isFinite = __webpack_require__(255);
 	
-	var preloadType = __webpack_require__(258).preloadType;
-	var checkProps = checkProps = __webpack_require__(259);
+	var preloadType = __webpack_require__(256).preloadType;
+	var checkProps = checkProps = __webpack_require__(257);
 	
 	var Infinite = React.createClass({
 	  displayName: 'Infinite',
@@ -8458,7 +8396,7 @@ webpackJsonpbundle([0],[
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 248 */
+/* 246 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -8471,15 +8409,15 @@ webpackJsonpbundle([0],[
 	'use strict';
 	
 	if (!Object.assign) {
-	  Object.assign = __webpack_require__(249);
+	  Object.assign = __webpack_require__(247);
 	}
 	
 	if (!Array.isArray) {
-	  Array.isArray = __webpack_require__(250);
+	  Array.isArray = __webpack_require__(248);
 	}
 
 /***/ },
-/* 249 */
+/* 247 */
 /***/ function(module, exports) {
 
 	/* eslint-disable no-unused-vars */
@@ -8524,7 +8462,7 @@ webpackJsonpbundle([0],[
 
 
 /***/ },
-/* 250 */
+/* 248 */
 /***/ function(module, exports) {
 
 	/**
@@ -8710,7 +8648,7 @@ webpackJsonpbundle([0],[
 
 
 /***/ },
-/* 251 */
+/* 249 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -8720,13 +8658,13 @@ webpackJsonpbundle([0],[
 	};
 
 /***/ },
-/* 252 */
+/* 250 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
 	
-	var ConstantInfiniteComputer = __webpack_require__(253);
-	var ArrayInfiniteComputer = __webpack_require__(255);
+	var ConstantInfiniteComputer = __webpack_require__(251);
+	var ArrayInfiniteComputer = __webpack_require__(253);
 	var React = global.React || __webpack_require__(51);
 	
 	function createInfiniteComputer(data, children) {
@@ -8772,7 +8710,7 @@ webpackJsonpbundle([0],[
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 253 */
+/* 251 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -8785,7 +8723,7 @@ webpackJsonpbundle([0],[
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var InfiniteComputer = __webpack_require__(254);
+	var InfiniteComputer = __webpack_require__(252);
 	
 	var ConstantInfiniteComputer = (function (_InfiniteComputer) {
 	  _inherits(ConstantInfiniteComputer, _InfiniteComputer);
@@ -8834,7 +8772,7 @@ webpackJsonpbundle([0],[
 	module.exports = ConstantInfiniteComputer;
 
 /***/ },
-/* 254 */
+/* 252 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {// An infinite computer must be able to do the following things:
@@ -8914,7 +8852,7 @@ webpackJsonpbundle([0],[
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(53)))
 
 /***/ },
-/* 255 */
+/* 253 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -8927,8 +8865,8 @@ webpackJsonpbundle([0],[
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var InfiniteComputer = __webpack_require__(254),
-	    bs = __webpack_require__(256);
+	var InfiniteComputer = __webpack_require__(252),
+	    bs = __webpack_require__(254);
 	
 	var ArrayInfiniteComputer = (function (_InfiniteComputer) {
 	  _inherits(ArrayInfiniteComputer, _InfiniteComputer);
@@ -8996,7 +8934,7 @@ webpackJsonpbundle([0],[
 	module.exports = ArrayInfiniteComputer;
 
 /***/ },
-/* 256 */
+/* 254 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -9044,7 +8982,7 @@ webpackJsonpbundle([0],[
 	};
 
 /***/ },
-/* 257 */
+/* 255 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -9095,7 +9033,7 @@ webpackJsonpbundle([0],[
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 258 */
+/* 256 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
@@ -9111,7 +9049,7 @@ webpackJsonpbundle([0],[
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 259 */
+/* 257 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {// This module provides a centralized place for
@@ -9121,7 +9059,7 @@ webpackJsonpbundle([0],[
 	'use strict';
 	
 	var React = global.React || __webpack_require__(51);
-	var _isFinite = __webpack_require__(257);
+	var _isFinite = __webpack_require__(255);
 	
 	module.exports = function (props) {
 	  var rie = 'Invariant Violation: ';
@@ -9140,6 +9078,72 @@ webpackJsonpbundle([0],[
 	  }
 	};
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 258 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.zoomIn = zoomIn;
+	exports.zoomOut = zoomOut;
+	exports.nextPage = nextPage;
+	exports.prevPage = prevPage;
+	function zoomIn() {
+	  return {
+	    meta: { remote: true },
+	    type: "ZOOM_IN"
+	  };
+	}
+	
+	function zoomOut() {
+	  return {
+	    meta: { remote: true },
+	    type: "ZOOM_OUT"
+	  };
+	}
+	
+	function nextPage() {
+	  return {
+	    meta: { remote: true },
+	    type: "NEXT_PAGE"
+	  };
+	}
+	
+	function prevPage() {
+	  return {
+	    meta: { remote: true },
+	    type: "PREV_PAGE"
+	  };
+	}
+
+/***/ },
+/* 259 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.viewer = viewer;
+	function viewer() {
+	  var state = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+	  var action = arguments[1];
+	
+	  switch (action.type) {
+	    case 'SET_PHOTOS':
+	      {
+	        return {
+	          photos: action.photos
+	        };
+	      }
+	  }
+	  return state;
+	}
 
 /***/ }
 ]);
