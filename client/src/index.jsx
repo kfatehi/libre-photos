@@ -7,16 +7,19 @@ import { useScroll } from 'react-router-scroll';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import * as reducers from './reducers';
 import routes from './routes';
+import remoteActionMiddleware from './remote-action-middleware';
 
 const socket = io();
 
 const reducer = combineReducers(reducers);
 
-const store = createStore(reducer);
+const createStoreWithMiddleware = applyMiddleware(
+  remoteActionMiddleware(socket)
+)(createStore);
+
+const store = createStoreWithMiddleware(reducer);
 
 socket.on('action', action => store.dispatch(action));
-
-store.dispatch({ type: "INIT" });
 
 ReactDOM.render(
   <Provider store={store}>

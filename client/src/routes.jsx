@@ -6,5 +6,4 @@ import { Photo } from './components/Photo';
 
 module.exports = <Route component={App}>
   <Route path="/" component={HomeContainer}/>
-  <Route path="/photo/:modelId" component={Photo}/>
 </Route>;

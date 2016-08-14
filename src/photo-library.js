@@ -29,6 +29,8 @@ function PhotoLibrary(path, opts) {
     storage: paths.ImageProxies
   });
 
+  this._Library = Library;
+
   this.Master = Library.define('Master', {
     modelId: {
       type: Sequelize.INTEGER,

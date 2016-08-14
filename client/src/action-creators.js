@@ -1,27 +1,7 @@
-export function zoomIn() {
+export function loadPhotos(offset=0, limit=10) {
   return {
-    meta: { remote: true },
-    type: "ZOOM_IN"
-  }
-}
-
-export function zoomOut() {
-  return {
-    meta: { remote: true },
-    type: "ZOOM_OUT"
-  }
-}
-
-export function nextPage() {
-  return {
-    meta: { remote: true },
-    type: "NEXT_PAGE"
-  }
-}
-
-export function prevPage() {
-  return {
-    meta: { remote: true },
-    type: "PREV_PAGE"
+    meta: {remote: true},
+    type: 'LOAD_PHOTOS',
+    offset, limit
   }
 }

@@ -1,4 +1,5 @@
 module.exports = function(libraryPath, serverConfig, callback) {
+  var sequelize = require('sequelize');
   var express = require('express');
   var PhotoLibrary = require('./photo-library');
   var pkg = require('../package');
@@ -46,15 +47,23 @@ module.exports = function(libraryPath, serverConfig, callback) {
   });
 
   io.on('connection', function(socket) {
-    library.Master.findAll({
-      order: [['imageDate', 'DESC']]
-    }).then(function(rows) {
-      socket.emit('action', {
-        type: 'SET_PHOTOS',
-        photos: rows
+    socket.on('LOAD_PHOTOS', function(params) {
+      console.log('loading photos', params.offset, params.limit);
+      library.Master.findAll({
+        order: [['imageDate', 'DESC']],
+        offset: params.offset,
+        limit: params.limit
+      }).then(function(rows) {
+        socket.emit('action', {
+          type: 'PUSH_PHOTOS',
+          photos: rows,
+          offset: params.offset,
+          limit: params.limit
+        })
       })
-    })
+    });
   });
+
 
   server.listen(serverConfig.port, function(err) {
     callback(err, Object.assign({}, serverConfig))

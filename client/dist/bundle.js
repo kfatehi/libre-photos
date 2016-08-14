@@ -33,6 +33,10 @@ webpackJsonpbundle([0],[
 	
 	var _routes2 = _interopRequireDefault(_routes);
 	
+	var _remoteActionMiddleware = __webpack_require__(342);
+	
+	var _remoteActionMiddleware2 = _interopRequireDefault(_remoteActionMiddleware);
+	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -41,13 +45,13 @@ webpackJsonpbundle([0],[
 	
 	var reducer = (0, _redux.combineReducers)(reducers);
 	
-	var store = (0, _redux.createStore)(reducer);
+	var createStoreWithMiddleware = (0, _redux.applyMiddleware)((0, _remoteActionMiddleware2.default)(socket))(_redux.createStore);
+	
+	var store = createStoreWithMiddleware(reducer);
 	
 	socket.on('action', function (action) {
 	  return store.dispatch(action);
 	});
-	
-	store.dispatch({ type: "INIT" });
 	
 	_reactDom2.default.render(_react2.default.createElement(
 	  _reactRedux.Provider,
@@ -9012,40 +9016,20 @@ webpackJsonpbundle([0],[
 /* 262 */
 /***/ function(module, exports) {
 
-	"use strict";
+	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.zoomIn = zoomIn;
-	exports.zoomOut = zoomOut;
-	exports.nextPage = nextPage;
-	exports.prevPage = prevPage;
-	function zoomIn() {
-	  return {
-	    meta: { remote: true },
-	    type: "ZOOM_IN"
-	  };
-	}
+	exports.loadPhotos = loadPhotos;
+	function loadPhotos() {
+	  var offset = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
+	  var limit = arguments.length <= 1 || arguments[1] === undefined ? 10 : arguments[1];
 	
-	function zoomOut() {
 	  return {
 	    meta: { remote: true },
-	    type: "ZOOM_OUT"
-	  };
-	}
-	
-	function nextPage() {
-	  return {
-	    meta: { remote: true },
-	    type: "NEXT_PAGE"
-	  };
-	}
-	
-	function prevPage() {
-	  return {
-	    meta: { remote: true },
-	    type: "PREV_PAGE"
+	    type: 'LOAD_PHOTOS',
+	    offset: offset, limit: limit
 	  };
 	}
 
@@ -9059,15 +9043,20 @@ webpackJsonpbundle([0],[
 	  value: true
 	});
 	exports.viewer = viewer;
+	
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+	
 	function viewer() {
 	  var state = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 	  var action = arguments[1];
 	
 	  switch (action.type) {
-	    case 'SET_PHOTOS':
+	    case 'PUSH_PHOTOS':
 	      {
 	        return {
-	          photos: action.photos
+	          photos: [].concat(_toConsumableArray(state.photos || []), _toConsumableArray(action.photos)),
+	          offset: action.offset,
+	          limit: action.limit
 	        };
 	      }
 	  }
@@ -15322,7 +15311,7 @@ webpackJsonpbundle([0],[
 	
 	var _reactInfinite2 = _interopRequireDefault(_reactInfinite);
 	
-	var _reactRouter = __webpack_require__(264);
+	var _Photo = __webpack_require__(339);
 	
 	var _actionCreators = __webpack_require__(262);
 	
@@ -15336,44 +15325,26 @@ webpackJsonpbundle([0],[
 	  displayName: 'Home',
 	
 	  render: function render() {
-	    var photos = this.props.photos;
-	
+	    var _props = this.props;
+	    var photos = _props.photos;
+	    var offset = _props.offset;
+	    var limit = _props.limit;
+	    var loadPhotos = _props.loadPhotos;
 	
 	    var mediaHeight = 235;
-	
-	    var mediaStyle = {
-	      height: mediaHeight + 'px',
-	      overflow: 'hidden'
-	    };
-	
-	    var imgStyle = {
-	      height: '200px'
-	    };
-	
-	    var captionStyle = {
-	      height: '25px',
-	      fontSize: '16px',
-	      borderBottom: '1px solid #ccc'
-	    };
-	
 	    return _react2.default.createElement(
 	      _reactInfinite2.default,
-	      { containerHeight: window.innerHeight, elementHeight: mediaHeight, useWindowAsScrollContainer: true },
+	      {
+	        elementHeight: mediaHeight,
+	        infiniteLoadBeginEdgeOffset: window.innerHeight,
+	        useWindowAsScrollContainer: true,
+	        onInfiniteLoad: function onInfiniteLoad() {
+	          if (this.isInfiniteLoading) return;
+	          var ofs = photos.length === 0 ? 0 : offset + limit;
+	          loadPhotos(ofs, limit);
+	        } },
 	      photos.map(function (photo) {
-	        return _react2.default.createElement(
-	          'div',
-	          { style: mediaStyle, key: photo.modelId },
-	          _react2.default.createElement(
-	            _reactRouter.Link,
-	            { to: '/photo/' + photo.modelId },
-	            _react2.default.createElement('img', { style: imgStyle, src: '/thumbnails/' + photo.modelId })
-	          ),
-	          _react2.default.createElement(
-	            'div',
-	            { style: captionStyle },
-	            photo.UTI
-	          )
-	        );
+	        return _react2.default.createElement(_Photo.Photo, { key: photo.modelId, height: mediaHeight, photo: photo });
 	      })
 	    );
 	  }
@@ -15381,7 +15352,9 @@ webpackJsonpbundle([0],[
 	
 	function mapStateToProps(state, props) {
 	  return {
-	    photos: state.viewer.photos || []
+	    photos: state.viewer.photos || [],
+	    offset: state.viewer.offset || 0,
+	    limit: state.viewer.limit || 10
 	  };
 	}
 	
@@ -15404,25 +15377,74 @@ webpackJsonpbundle([0],[
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
+	var Media = _react2.default.createClass({
+	  displayName: 'Media',
+	
+	  render: function render() {
+	    var _props = this.props;
+	    var height = _props.height;
+	    var UTI = _props.UTI;
+	    var thumbPath = _props.thumbPath;
+	    var srcPath = _props.srcPath;
+	
+	    var style = { height: height };
+	    switch (UTI) {
+	      case 'com.apple.quicktime-movie':
+	        return _react2.default.createElement(
+	          'video',
+	          { style: style, poster: thumbPath,
+	            controls: true, onClick: function onClick(ev) {
+	              return ev.target.play();
+	            } },
+	          _react2.default.createElement('source', { src: srcPath })
+	        );
+	      default:
+	        return _react2.default.createElement(
+	          'a',
+	          { href: srcPath },
+	          _react2.default.createElement('img', { style: style, src: thumbPath })
+	        );
+	    }
+	  }
+	});
+	
 	var Photo = exports.Photo = _react2.default.createClass({
 	  displayName: 'Photo',
 	
 	  render: function render() {
-	    console.log(this.props);
-	    var modelId = this.props.params.modelId;
+	    var _props2 = this.props;
+	    var height = _props2.height;
+	    var _props2$photo = _props2.photo;
+	    var UTI = _props2$photo.UTI;
+	    var modelId = _props2$photo.modelId;
+	    var imageDate = _props2$photo.imageDate;
+	    var imageTimeZoneOffsetSeconds = _props2$photo.imageTimeZoneOffsetSeconds;
 	
-	    var imgSrc = '/masters/' + modelId;
-	    var imgStyle = {
-	      width: '100%',
-	      height: '100%'
+	    var srcPath = '/masters/' + modelId;
+	    var thumbPath = '/thumbnails/' + modelId;
+	
+	    var captionStyle = {
+	      height: 25,
+	      fontSize: 16,
+	      borderBottom: '1px solid #ccc'
 	    };
+	
 	    return _react2.default.createElement(
-	      'a',
-	      { href: imgSrc },
-	      _react2.default.createElement('img', { style: imgStyle, src: imgSrc })
+	      'div',
+	      { height: height },
+	      _react2.default.createElement(Media, { height: height - captionStyle.height, UTI: UTI, thumbPath: thumbPath, srcPath: srcPath }),
+	      _react2.default.createElement(
+	        'div',
+	        { style: captionStyle },
+	        parseDate(imageDate + imageTimeZoneOffsetSeconds).toString()
+	      )
 	    );
 	  }
 	});
+	
+	function parseDate(dbDate) {
+	  return new Date(Math.round(new Date((dbDate + 978307200) * 1000)));
+	}
 
 /***/ },
 /* 340 */
@@ -15447,9 +15469,32 @@ webpackJsonpbundle([0],[
 	module.exports = _react2.default.createElement(
 	  _reactRouter.Route,
 	  { component: _App.App },
-	  _react2.default.createElement(_reactRouter.Route, { path: '/', component: _Home.HomeContainer }),
-	  _react2.default.createElement(_reactRouter.Route, { path: '/photo/:modelId', component: _Photo.Photo })
+	  _react2.default.createElement(_reactRouter.Route, { path: '/', component: _Home.HomeContainer })
 	);
+
+/***/ },
+/* 341 */,
+/* 342 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	exports.default = function (socket) {
+	  return function (store) {
+	    return function (next) {
+	      return function (action) {
+	        if (action.meta && action.meta.remote) {
+	          socket.emit(action.type, action);
+	        }
+	        return next(action);
+	      };
+	    };
+	  };
+	};
 
 /***/ }
 ]);

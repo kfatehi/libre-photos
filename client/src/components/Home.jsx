@@ -1,36 +1,24 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import Infinite from 'react-infinite';
-import { Link } from 'react-router';
+import { Photo } from './Photo';
 import * as actionCreators from '../action-creators';
 
 export const Home = React.createClass({
   render: function() {
-    const { photos } = this.props;
-
+    const { photos, offset, limit, loadPhotos } = this.props;
     const mediaHeight = 235;
-
-    const mediaStyle = {
-      height: `${mediaHeight}px`,
-      overflow: 'hidden'
-    }
-
-    const imgStyle = {
-      height: '200px'
-    }
-
-    const captionStyle = {
-      height: '25px',
-      fontSize: '16px',
-      borderBottom: '1px solid #ccc'
-    }
-
     return (
-      <Infinite containerHeight={window.innerHeight} elementHeight={mediaHeight} useWindowAsScrollContainer>
-        {photos.map(photo => <div style={mediaStyle} key={photo.modelId}>
-          <Link to={`/photo/${photo.modelId}`}><img style={imgStyle} src={`/thumbnails/${photo.modelId}`}/></Link>
-          <div style={captionStyle}>{photo.UTI}</div>
-        </div>)}
+      <Infinite
+        elementHeight={mediaHeight}
+        infiniteLoadBeginEdgeOffset={window.innerHeight}
+        useWindowAsScrollContainer
+        onInfiniteLoad={function() {
+          if (this.isInfiniteLoading) return;
+          let ofs = photos.length === 0 ? 0 : offset + limit;
+          loadPhotos(ofs, limit);
+      }}>
+      {photos.map(photo => <Photo key={photo.modelId} height={mediaHeight} photo={photo} />)}
       </Infinite>
     );
   }
@@ -38,7 +26,9 @@ export const Home = React.createClass({
 
 function mapStateToProps(state, props) {
   return {
-    photos: state.viewer.photos || []
+    photos: state.viewer.photos || [],
+    offset: state.viewer.offset || 0,
+    limit: state.viewer.limit || 10,
   };
 }
 

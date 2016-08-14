@@ -1,8 +1,10 @@
 export function viewer(state = {}, action) {
   switch (action.type) {
-    case 'SET_PHOTOS': {
+    case 'PUSH_PHOTOS': {
       return {
-        photos: action.photos
+        photos: [...state.photos || [], ...action.photos],
+        offset: action.offset,
+        limit: action.limit
       }
     }
   }
