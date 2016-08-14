@@ -1,9 +1,10 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import Infinite from 'react-infinite';
+import { Link } from 'react-router';
 import * as actionCreators from '../action-creators';
 
-export const Viewer = React.createClass({
+export const Home = React.createClass({
   render: function() {
     const { photos } = this.props;
 
@@ -27,7 +28,7 @@ export const Viewer = React.createClass({
     return (
       <Infinite containerHeight={window.innerHeight} elementHeight={mediaHeight} useWindowAsScrollContainer>
         {photos.map(photo => <div style={mediaStyle} key={photo.modelId}>
-          <a href={`/masters/${photo.modelId}`}><img style={imgStyle} src={`/thumbnails/${photo.modelId}`}/></a>
+          <Link to={`/photo/${photo.modelId}`}><img style={imgStyle} src={`/thumbnails/${photo.modelId}`}/></Link>
           <div style={captionStyle}>{photo.UTI}</div>
         </div>)}
       </Infinite>
@@ -41,7 +42,7 @@ function mapStateToProps(state, props) {
   };
 }
 
-export const ViewerContainer = connect(
+export const HomeContainer = connect(
   mapStateToProps,
   actionCreators
-)(Viewer);
+)(Home);

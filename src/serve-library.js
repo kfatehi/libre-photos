@@ -8,10 +8,11 @@ module.exports = function(libraryPath, serverConfig, callback) {
   var io = require('socket.io').listen(server);
   var library = new PhotoLibrary(libraryPath, serverConfig);
   var path = require('path');
+  var distPath = path.join(__dirname,'..', 'client', 'dist');
 
   app.use(cors());
 
-  app.use(express.static(path.join(__dirname,'..', 'client', 'dist')));
+  app.use(express.static(distPath));
 
   app.use(require('connect-stream')());
 
@@ -38,6 +39,10 @@ module.exports = function(libraryPath, serverConfig, callback) {
         res.sendFile(path.join(__dirname, '..', 'client', 'dist', 'img', 'nothumb.png'));
       }
     }).catch(next);
+  });
+
+  app.get('/*', function(req, res, next) {
+    res.sendFile(path.join(distPath, 'index.html'));
   });
 
   io.on('connection', function(socket) {
